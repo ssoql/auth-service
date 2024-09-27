@@ -1,57 +1,88 @@
 package config
 
 import (
+	"log"
+
 	"github.com/golang-jwt/jwt"
-	"os"
+	"github.com/spf13/viper"
 )
 
 const (
 	LogLevel    = "info"
-	appEnv      = "APP_ENV"
 	production  = "prod"
 	develop     = "dev"
-	port        = "8083"
-	dbUsername  = "APP_MYSQL_USERNAME"
-	dbPassword  = "APP_MYSQL_PASSWORD"
-	dbHost      = "APP_MYSQL_HOST"
-	dbPort      = "APP_MYSQL_PORT"
-	dbSchema    = "APP_MYSQL_SCHEMA"
-	esHosts     = "APP_ES_HOSTS"
 	SecurityKey = "SecretYouShouldHide"
 )
 
-func IsProduction() bool {
-	return os.Getenv(appEnv) == production
+type Env struct {
+	AppEnv                 string `mapstructure:"APP_ENV"`
+	AppPort                string `mapstructure:"APP_PORT"`
+	ServerAddress          string `mapstructure:"SERVER_ADDRESS"`
+	ContextTimeout         int    `mapstructure:"CONTEXT_TIMEOUT"`
+	DBHost                 string `mapstructure:"DB_HOST"`
+	DBPort                 string `mapstructure:"DB_PORT"`
+	DBUser                 string `mapstructure:"DB_USER"`
+	DBPass                 string `mapstructure:"DB_PASS"`
+	DBName                 string `mapstructure:"DB_NAME"`
+	AccessTokenExpiryHour  int    `mapstructure:"ACCESS_TOKEN_EXPIRY_HOUR"`
+	RefreshTokenExpiryHour int    `mapstructure:"REFRESH_TOKEN_EXPIRY_HOUR"`
+	AccessTokenSecret      string `mapstructure:"ACCESS_TOKEN_SECRET"`
+	RefreshTokenSecret     string `mapstructure:"REFRESH_TOKEN_SECRET"`
 }
 
-func IsDevelop() bool {
-	return os.Getenv(appEnv) == develop
+func (e *Env) IsProduction() bool {
+	return e.AppEnv == production
 }
 
-func GetPort() string {
-	return ":" + port
+func (e *Env) IsDevelop() bool {
+	return e.AppEnv == develop
 }
 
-func GetDbUser() string {
-	return os.Getenv(dbUsername)
+func (e *Env) GetPort() string {
+	return ":" + e.AppPort
 }
 
-func GetDbPassword() string {
-	return os.Getenv(dbPassword)
+func (e *Env) GetDbUser() string {
+	return e.DBUser
 }
 
-func GetDbHost() string {
-	return os.Getenv(dbHost)
+func (e *Env) GetDbPassword() string {
+	return e.DBPass
 }
 
-func GetDbPort() string {
-	return os.Getenv(dbPort)
+func (e *Env) GetDbHost() string {
+	return e.DBHost
 }
 
-func GetDbSchema() string {
-	return os.Getenv(dbSchema)
+func (e *Env) GetDbPort() string {
+	return e.DBPort
+}
+
+func (e *Env) GetDbSchema() string {
+	return e.DBName
 }
 
 func GetJWTSigningMethod() jwt.SigningMethod {
 	return jwt.SigningMethodHS256
+}
+
+func NewEnv() *Env {
+	env := Env{}
+	viper.SetConfigFile(".env")
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.Fatal("Can't find the file .env : ", err)
+	}
+
+	err = viper.Unmarshal(&env)
+	if err != nil {
+		log.Fatal("Environment can't be loaded: ", err)
+	}
+
+	if env.AppEnv == "development" {
+		log.Println("The App is running in development env")
+	}
+
+	return &env
 }

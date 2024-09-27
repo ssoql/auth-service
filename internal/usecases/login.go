@@ -2,11 +2,13 @@ package usecases
 
 import (
 	"context"
+	"time"
+
 	"github.com/golang-jwt/jwt"
+	"github.com/ssoql/serviceutils/apierrors"
+
 	"github.com/ssoql/auth-service/config"
 	"github.com/ssoql/auth-service/internal/usecases/repositories"
-	"github.com/ssoql/serviceutils/apierrors"
-	"time"
 )
 
 type LoginUseCase interface {
@@ -44,7 +46,7 @@ func createJWT(ctx context.Context, username string) (string, apierrors.ApiError
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = username
-	claims["exp"] = time.Now().Add(5 * time.Minute).Unix()
+	claims["exp"] = time.Now().Add(15 * time.Minute).Unix()
 	claims["created"] = time.Now().Unix()
 	claims["isAdmin"] = true
 
