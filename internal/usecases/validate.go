@@ -22,6 +22,10 @@ func (u validateUseCase) Handle(ctx context.Context, token string) (bool, apierr
 		return []byte(config.SecurityKey), nil
 	})
 
+	if err != nil {
+		return false, apierrors.NewUnauthorizedError("No token provided!")
+	}
+
 	if !parsedToken.Valid {
 		return false, apierrors.NewUnauthorizedError("Unauthorized!")
 	}
