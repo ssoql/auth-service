@@ -2,39 +2,41 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ssoql/auth-service/internal/usecases"
 	"github.com/ssoql/serviceutils/apierrors"
+
+	"github.com/ssoql/auth-service/internal/use_cases"
 )
 
 type validateHandler struct {
-	useCase usecases.ValidateUseCase
+	useCase use_cases.ValidateUseCase
 }
 
-func NewValidateHandler(validateSseCase usecases.ValidateUseCase) *validateHandler {
+func NewValidateHandler(validateSseCase use_cases.ValidateUseCase) *validateHandler {
 	return &validateHandler{useCase: validateSseCase}
 }
 
 func (h *validateHandler) Handle(c *gin.Context) {
-	token, err := retrieveAuthToken(c)
+	input, err := retrieveTokenInput(c)
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return
 	}
 
-	valid, err := h.useCase.Handle(c, token)
+	valid, err := h.useCase.Handle(c, input.Token)
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return
 	}
 
-	c.JSON(200, gin.H{"authorized": valid})
+	c.JSON(200, gin.H{"authenticated": valid})
 }
 
-func retrieveAuthToken(c *gin.Context) (string, apierrors.ApiError) {
-	token := c.GetHeader("Token")
-	if token == "" {
-		return "", apierrors.NewBadRequestError("missing auth token")
+func retrieveTokenInput(c *gin.Context) (*TokenInput, apierrors.ApiError) {
+	var input TokenInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		return nil, apierrors.NewBadRequestError("invalid json data")
 	}
 
-	return token, nil
+	return &input, nil
 }

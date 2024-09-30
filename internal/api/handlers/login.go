@@ -4,14 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ssoql/serviceutils/crypto"
 
-	"github.com/ssoql/auth-service/internal/usecases"
+	"github.com/ssoql/auth-service/internal/use_cases"
 )
 
 type loginHandler struct {
-	useCase usecases.LoginUseCase
+	useCase use_cases.LoginUseCase
 }
 
-func NewLoginHandler(loginUseCase usecases.LoginUseCase) *loginHandler {
+func NewLoginHandler(loginUseCase use_cases.LoginUseCase) *loginHandler {
 	return &loginHandler{useCase: loginUseCase}
 }
 

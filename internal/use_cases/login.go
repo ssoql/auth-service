@@ -1,4 +1,4 @@
-package usecases
+package use_cases
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"github.com/ssoql/serviceutils/apierrors"
 
 	"github.com/ssoql/auth-service/config"
-	"github.com/ssoql/auth-service/internal/usecases/repositories"
+	"github.com/ssoql/auth-service/internal/use_cases/repositories"
 )
 
 type LoginUseCase interface {
@@ -16,10 +16,10 @@ type LoginUseCase interface {
 }
 
 type loginUseCase struct {
-	dbRead repositories.UserReadRepository
+	dbRead repositories.UserReader
 }
 
-func NewLoginUseCase(readRepository repositories.UserReadRepository) *loginUseCase {
+func NewLoginUseCase(readRepository repositories.UserReader) *loginUseCase {
 	return &loginUseCase{dbRead: readRepository}
 }
 

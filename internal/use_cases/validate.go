@@ -1,10 +1,12 @@
-package usecases
+package use_cases
 
 import (
 	"context"
+
 	"github.com/golang-jwt/jwt"
-	"github.com/ssoql/auth-service/config"
 	"github.com/ssoql/serviceutils/apierrors"
+
+	"github.com/ssoql/auth-service/config"
 )
 
 type ValidateUseCase interface {
