@@ -11,7 +11,7 @@ import (
 
 func tokenAuthorization() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if c.Request.RequestURI != "/users/authenticate" {
+		if c.Request.RequestURI != "/token" {
 			token := c.Request.Header.Get("Authorization")
 
 			if token == "" {

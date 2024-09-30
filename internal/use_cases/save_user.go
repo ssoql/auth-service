@@ -1,11 +1,13 @@
-package usecases
+package use_cases
 
 import (
 	"context"
-	"github.com/ssoql/auth-service/internal/usecases/repositories"
+
+	"github.com/ssoql/auth-service/internal/use_cases/repositories"
+
+	"github.com/ssoql/serviceutils/apierrors"
 
 	"github.com/ssoql/auth-service/internal/app/entities"
-	"github.com/ssoql/serviceutils/apierrors"
 )
 
 type SaveUserUseCase interface {
@@ -13,11 +15,11 @@ type SaveUserUseCase interface {
 }
 
 type saveUserUseCase struct {
-	dbRead  repositories.UserReadRepository
-	dbWrite repositories.UserWriteRepository
+	dbRead  repositories.UserReader
+	dbWrite repositories.UserWriter
 }
 
-func NewSaveUserUseCase(readRepository repositories.UserReadRepository, writeRepository repositories.UserWriteRepository) *saveUserUseCase {
+func NewSaveUserUseCase(readRepository repositories.UserReader, writeRepository repositories.UserWriter) *saveUserUseCase {
 	return &saveUserUseCase{dbRead: readRepository, dbWrite: writeRepository}
 }
 

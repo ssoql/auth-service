@@ -1,19 +1,20 @@
 package handlers
 
 import (
-	"github.com/ssoql/serviceutils/apierrors"
 	"net/http"
+
+	"github.com/ssoql/serviceutils/apierrors"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/ssoql/auth-service/internal/usecases"
+	"github.com/ssoql/auth-service/internal/use_cases"
 )
 
 type userCreateHandler struct {
-	useCase usecases.SaveUserUseCase
+	useCase use_cases.SaveUserUseCase
 }
 
-func NewUserCreateHandler(saveUserUseCase usecases.SaveUserUseCase) *userCreateHandler {
+func NewUserCreateHandler(saveUserUseCase use_cases.SaveUserUseCase) *userCreateHandler {
 	return &userCreateHandler{useCase: saveUserUseCase}
 }
 
